@@ -4,33 +4,29 @@
 #![test_runner(blog_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-use blog_os::println;
+use blog_os::{hlt_loop, println};
 use core::panic::PanicInfo;
 
 #[no_mangle]
-#[allow(clippy::empty_loop)]
 pub extern "C" fn _start() -> ! {
     println!("Hello World {}!", 2022);
 
     blog_os::init();
 
-    unsafe {
-        *(0xdeadbeef as *mut u64) = 42;
-    };
-
     #[cfg(test)]
     test_main();
 
-    loop {}
+    println!("It did not crash!");
+
+    blog_os::hlt_loop();
 }
 
 /// This function is called on panic.
 #[cfg(not(test))]
 #[panic_handler]
-#[allow(clippy::empty_loop)]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    hlt_loop()
 }
 
 #[cfg(test)]
