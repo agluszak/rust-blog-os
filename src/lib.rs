@@ -10,12 +10,12 @@ pub mod serial;
 pub mod vga_buffer;
 
 pub trait Testable {
-    fn run(&self) -> ();
+    fn run(&self);
 }
 
 impl<T> Testable for T
-    where
-        T: Fn(),
+where
+    T: Fn(),
 {
     fn run(&self) {
         serial_print!("{}...\t", core::any::type_name::<T>());
@@ -32,6 +32,7 @@ pub fn test_runner(tests: &[&dyn Testable]) {
     exit_qemu(QemuExitCode::Success);
 }
 
+#[allow(clippy::empty_loop)]
 pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("[failed]\n");
     serial_println!("Error: {}\n", info);

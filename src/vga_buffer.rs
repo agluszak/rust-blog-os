@@ -95,14 +95,17 @@ pub struct Writer {
     buffer: Volatile<&'static mut Buffer>,
 }
 
-
 impl Writer {
     fn read_char(&self, row: usize, column: usize) -> ScreenChar {
-        self.buffer.map(|buffer| &buffer[column + row * BUFFER_WIDTH]).read()
+        self.buffer
+            .map(|buffer| &buffer[column + row * BUFFER_WIDTH])
+            .read()
     }
 
     fn write_char(&mut self, c: ScreenChar, row: usize, column: usize) {
-       self.buffer.map_mut(|buffer| &mut buffer[column + row * BUFFER_WIDTH]).write(c)
+        self.buffer
+            .map_mut(|buffer| &mut buffer[column + row * BUFFER_WIDTH])
+            .write(c)
     }
 
     /// Writes an ASCII byte to the buffer.
@@ -120,10 +123,14 @@ impl Writer {
                 let col = self.column_position;
 
                 let color_code = self.color_code;
-                self.write_char(ScreenChar {
-                                    ascii_character: byte,
-                                    color_code,
-                                }, row, col);
+                self.write_char(
+                    ScreenChar {
+                        ascii_character: byte,
+                        color_code,
+                    },
+                    row,
+                    col,
+                );
                 self.column_position += 1;
             }
         }

@@ -8,8 +8,9 @@ use blog_os::println;
 use core::panic::PanicInfo;
 
 #[no_mangle]
+#[allow(clippy::empty_loop)]
 pub extern "C" fn _start() -> ! {
-    println!("Hello World{}", "!");
+    println!("Hello World {}!", 2022);
 
     #[cfg(test)]
     test_main();
@@ -20,6 +21,7 @@ pub extern "C" fn _start() -> ! {
 /// This function is called on panic.
 #[cfg(not(test))]
 #[panic_handler]
+#[allow(clippy::empty_loop)]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
     loop {}
